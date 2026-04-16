@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tutouriq Calculator</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg, #e6f0ff, #f5faff);
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.calculator {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  width: 350px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+label {
+  display: block;
+  margin: 10px 0;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 8px;
+}
+
+.result {
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+  <h2>Tutouriq Calculator</h2>
+
+  <label><input type="checkbox" value="20" class="subject"> Math ($20)</label>
+  <label><input type="checkbox" value="15" class="subject"> Science ($15)</label>
+  <label><input type="checkbox" value="15" class="subject"> Humanities ($15)</label>
+  <label><input type="checkbox" value="15" class="subject"> Study Tips ($15)</label>
+
+  <br>
+
+  <label>Weeks:</label>
+  <input type="number" id="weeks" value="1">
+
+  <div class="result">
+    <p>Subjects: <span id="count">0</span></p>
+    <p>Weekly: $<span id="weekly">0</span></p>
+    <p id="discountText" style="color:green;"></p>
+    <h3>Total: $<span id="total">0</span></h3>
+  </div>
+</div>
+
+<script>
+const subjects = document.querySelectorAll('.subject');
+const weeksInput = document.getElementById('weeks');
+
+subjects.forEach(s => s.addEventListener('change', calculate));
+weeksInput.addEventListener('input', calculate);
+
+function calculate() {
+  let weekly = 0;
+  let count = 0;
+
+  subjects.forEach(s => {
+    if (s.checked) {
+      weekly += parseFloat(s.value);
+      count++;
+    }
+  });
+
+  let weeks = parseInt(weeksInput.value) || 0;
+
+  let discount = 0;
+  let text = "";
+
+  if (count >= 2) {
+    discount = 0.10;
+    text = "🎉 10% discount applied!";
+  }
+
+  let finalWeekly = weekly - (weekly * discount);
+  let total = finalWeekly * weeks;
+
+  document.getElementById('count').textContent = count;
+  document.getElementById('weekly').textContent = finalWeekly.toFixed(2);
+  document.getElementById('total').textContent = total.toFixed(2);
+  document.getElementById('discountText').textContent = text;
+}
+
+calculate();
+</script>
+
+</body>
+</html>
