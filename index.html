@@ -6,110 +6,146 @@
 
 <style>
 body {
-  margin: 0;
-  font-family: Arial;
-  background: linear-gradient(135deg, #e6f0ff, #f5faff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+    text-align: center;
+    margin: 0;
 }
 
-/* Calculator box */
-.calculator {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  width: 320px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+.container {
+    background: white;
+    padding: 25px;
+    max-width: 360px;
+    margin: 40px auto;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    border-top: 6px solid #4FC3F7;
 }
 
-/* Labels */
-label {
-  display: block;
-  margin: 8px 0;
-  font-size: 14px;
+h2 {
+    color: #0B1F3B;
+    margin-bottom: 15px;
 }
 
-/* Input */
+.subject {
+    text-align: left;
+    margin: 12px 0;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.subject:hover {
+    background: #e3f2fd;
+}
+
+input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #4FC3F7;
+}
+
 input[type="number"] {
-  width: 100%;
-  padding: 6px;
-  margin-top: 5px;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
 }
 
-/* Result */
+button {
+    margin-top: 18px;
+    padding: 12px 20px;
+    background: linear-gradient(45deg, #0B1F3B, #4FC3F7);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
 .result {
-  margin-top: 15px;
+    margin-top: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #0B1F3B;
 }
 
-.result h3 {
-  margin-top: 5px;
+.discount {
+    color: #2e7d32;
+    font-size: 14px;
+    margin-top: 5px;
 }
 </style>
+
 </head>
 
 <body>
 
-<div class="calculator">
-  <h2>Tutouriq Calculator</h2>
+<div class="container">
+    <h2>Tutouriq Calculator</h2>
 
-  <label><input type="checkbox" value="20" class="subject"> Math ($20)</label>
-  <label><input type="checkbox" value="15" class="subject"> Science ($15)</label>
-  <label><input type="checkbox" value="15" class="subject"> Humanities ($15)</label>
-  <label><input type="checkbox" value="15" class="subject"> Study Tips ($15)</label>
+    <div class="subject">
+        <input type="checkbox" value="20"> Math ($20/week)
+    </div>
 
-  <br>
+    <div class="subject">
+        <input type="checkbox" value="15"> Science ($15/week)
+    </div>
 
-  <label>Weeks:</label>
-  <input type="number" id="weeks" value="1">
+    <div class="subject">
+        <input type="checkbox" value="15"> Humanities ($15/week)
+    </div>
 
-  <div class="result">
-    <p>Subjects: <span id="count">0</span></p>
-    <p>Weekly: $<span id="weekly">0</span></p>
-    <p id="discountText" style="color:green; font-weight:bold;"></p>
-    <h3>Total: $<span id="total">0</span></h3>
-  </div>
+    <div class="subject">
+        <input type="checkbox" value="15"> Study Tips ($15/week)
+    </div>
+
+    <p>Number of Weeks:</p>
+    <input type="number" id="weeks" value="1" min="1">
+
+    <br>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result">$0</div>
+    <div class="discount" id="discount"></div>
 </div>
 
 <script>
-const subjects = document.querySelectorAll('.subject');
-const weeksInput = document.getElementById('weeks');
-
-subjects.forEach(s => s.addEventListener('change', calculate));
-weeksInput.addEventListener('input', calculate);
-
 function calculate() {
-  let weekly = 0;
-  let count = 0;
+    let selected = document.querySelectorAll('input[type="checkbox"]:checked');
+    let weeks = parseFloat(document.getElementById("weeks").value);
 
-  subjects.forEach(s => {
-    if (s.checked) {
-      weekly += parseFloat(s.value);
-      count++;
+    let totalPerWeek = 0;
+
+    selected.forEach(item => {
+        totalPerWeek += Number(item.value);
+    });
+
+    let originalTotal = totalPerWeek * weeks;
+    let finalTotal = originalTotal;
+    let savings = 0;
+
+    if (selected.length >= 2) {
+        finalTotal = originalTotal * 0.9;
+        savings = originalTotal - finalTotal;
+        document.getElementById("discount").innerText = "10% discount applied!";
+    } else {
+        document.getElementById("discount").innerText = "";
     }
-  });
 
-  let weeks = parseInt(weeksInput.value) || 0;
+    document.getElementById("result").innerHTML =
+        "$" + finalTotal.toFixed(2) + " total<br>" +
+        "<span style='font-size:14px; color:gray;'>($" + totalPerWeek + "/week × " + weeks + " weeks)</span>";
 
-  let discount = 0;
-  let text = "";
-
-  if (count >= 2) {
-    discount = 0.10;
-    text = "🎉 10% discount applied!";
-  }
-
-  let finalWeekly = weekly - (weekly * discount);
-  let total = finalWeekly * weeks;
-
-  document.getElementById('count').textContent = count;
-  document.getElementById('weekly').textContent = finalWeekly.toFixed(2);
-  document.getElementById('total').textContent = total.toFixed(2);
-  document.getElementById('discountText').textContent = text;
+    if (savings > 0) {
+        document.getElementById("discount").innerHTML += 
+            "<br>You saved $" + savings.toFixed(2) + " 🎉";
+    }
 }
-
-calculate();
 </script>
 
 </body>
