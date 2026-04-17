@@ -1,152 +1,153 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>Tutouriq Calculator</title>
+  <meta charset="UTF-8">
+  <title>Tutouriq Calculator</title>
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #e3f2fd, #ffffff);
-    text-align: center;
-    margin: 0;
-}
+  <!-- Responsive for mobile + Canva -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-.container {
-    background: white;
-    padding: 25px;
-    max-width: 360px;
-    margin: 40px auto;
-    border-radius: 15px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    border-top: 6px solid #4FC3F7;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-h2 {
-    color: #0B1F3B;
-    margin-bottom: 15px;
-}
+    .container {
+      background: white;
+      padding: 25px;
+      width: 340px;
+      border-radius: 15px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      border-top: 6px solid #4FC3F7;
+      text-align: center;
+    }
 
-.subject {
-    text-align: left;
-    margin: 12px 0;
-    padding: 8px;
-    border-radius: 8px;
-    transition: 0.2s;
-}
+    h2 {
+      color: #0B1F3B;
+      margin-bottom: 15px;
+    }
 
-.subject:hover {
-    background: #e3f2fd;
-}
+    .subject {
+      text-align: left;
+      margin: 10px 0;
+      padding: 8px;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
 
-input[type="checkbox"] {
-    margin-right: 8px;
-    accent-color: #4FC3F7;
-}
+    .subject:hover {
+      background: #e3f2fd;
+    }
 
-input[type="number"] {
-    padding: 6px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
+    input[type="checkbox"] {
+      accent-color: #4FC3F7;
+    }
 
-button {
-    margin-top: 18px;
-    padding: 12px 20px;
-    background: linear-gradient(45deg, #0B1F3B, #4FC3F7);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
+    input[type="number"] {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 80px;
+    }
 
-button:hover {
-    transform: scale(1.05);
-}
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      width: 100%;
+      background: linear-gradient(45deg, #0B1F3B, #4FC3F7);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-.result {
-    margin-top: 18px;
-    font-size: 22px;
-    font-weight: bold;
-    color: #0B1F3B;
-}
+    button:hover {
+      transform: scale(1.03);
+    }
 
-.discount {
-    color: #2e7d32;
-    font-size: 14px;
-    margin-top: 5px;
-}
-</style>
+    .result {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #0B1F3B;
+    }
 
+    .discount {
+      color: #2e7d32;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+  <div class="container">
     <h2>Tutouriq Calculator</h2>
 
     <div class="subject">
-        <input type="checkbox" value="20"> Math ($20/week)
+      <label><input type="checkbox" value="20"> Math ($20/week)</label>
     </div>
 
     <div class="subject">
-        <input type="checkbox" value="15"> Science ($15/week)
+      <label><input type="checkbox" value="15"> Science ($15/week)</label>
     </div>
 
     <div class="subject">
-        <input type="checkbox" value="15"> Humanities ($15/week)
+      <label><input type="checkbox" value="15"> Humanities ($15/week)</label>
     </div>
 
     <div class="subject">
-        <input type="checkbox" value="15"> Study Tips ($15/week)
+      <label><input type="checkbox" value="15"> Study Tips ($15/week)</label>
     </div>
 
     <p>Number of Weeks:</p>
     <input type="number" id="weeks" value="1" min="1">
 
-    <br>
-
     <button onclick="calculate()">Calculate</button>
 
     <div class="result" id="result">$0</div>
     <div class="discount" id="discount"></div>
-</div>
+  </div>
 
-<script>
-function calculate() {
-    let selected = document.querySelectorAll('input[type="checkbox"]:checked');
-    let weeks = parseFloat(document.getElementById("weeks").value);
+  <script>
+    function calculate() {
+      let selected = document.querySelectorAll('input[type="checkbox"]:checked');
+      let weeks = parseFloat(document.getElementById("weeks").value);
 
-    let totalPerWeek = 0;
+      let totalPerWeek = 0;
 
-    selected.forEach(item => {
+      selected.forEach(item => {
         totalPerWeek += Number(item.value);
-    });
+      });
 
-    let originalTotal = totalPerWeek * weeks;
-    let finalTotal = originalTotal;
-    let savings = 0;
+      let original = totalPerWeek * weeks;
+      let final = original;
+      let savings = 0;
 
-    if (selected.length >= 2) {
-        finalTotal = originalTotal * 0.9;
-        savings = originalTotal - finalTotal;
-        document.getElementById("discount").innerText = "10% discount applied!";
-    } else {
+      if (selected.length >= 2) {
+        final = original * 0.9;
+        savings = original - final;
+        document.getElementById("discount").innerText =
+          "10% discount applied! You saved $" + savings.toFixed(2);
+      } else {
         document.getElementById("discount").innerText = "";
-    }
+      }
 
-    document.getElementById("result").innerHTML =
-        "$" + finalTotal.toFixed(2) + " total<br>" +
-        "<span style='font-size:14px; color:gray;'>($" + totalPerWeek + "/week × " + weeks + " weeks)</span>";
-
-    if (savings > 0) {
-        document.getElementById("discount").innerHTML += 
-            "<br>You saved $" + savings.toFixed(2) + " 🎉";
+      document.getElementById("result").innerHTML =
+        "$" + final.toFixed(2) + " total<br>" +
+        "<span style='font-size:13px;color:gray;'>($" + totalPerWeek + "/week × " + weeks + " weeks)</span>";
     }
-}
-</script>
+  </script>
 
 </body>
 </html>
